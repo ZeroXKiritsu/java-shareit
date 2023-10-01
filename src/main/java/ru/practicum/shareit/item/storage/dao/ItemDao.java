@@ -1,10 +1,11 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item.storage.dao;
 
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemService {
+public interface ItemDao {
+
     Item createItem(Item item);
 
     Item updateItem(Item item);

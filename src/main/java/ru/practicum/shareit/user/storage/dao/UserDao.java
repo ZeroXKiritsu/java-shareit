@@ -1,11 +1,10 @@
-package ru.practicum.shareit.user.service;
+package ru.practicum.shareit.user.storage.dao;
 
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
-public interface UserService {
-
+public interface UserDao {
     User createUser(User user);
 
     User updateUser(long userId, User user);

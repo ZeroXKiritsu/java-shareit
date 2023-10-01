@@ -2,102 +2,61 @@ package ru.practicum.shareit.item.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.exception.OwnerNotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.storage.dao.ItemDao;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.storage.dao.UserDao;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static ru.practicum.shareit.item.ItemMapper.toItem;
-import static ru.practicum.shareit.item.ItemMapper.toItemDto;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+
+    public static final String OWNER_NOT_FOUND_MESSAGE = "Не найден владелец c id: ";
+    public static final int MIN_SEARCH_REQUEST_LENGTH = 3;
+
+    private final ItemDao itemDao;
+    private final UserDao userDao;
 
     @Override
-    public List<ItemDto> getAll(Long userId) {
-        List<ItemDto> items = new ArrayList<>();
-        for (Item item : itemRepository.findAll()) {
-            if (item.getOwner().getId().equals(userId)) {
-                items.add(toItemDto(item));
-            }
+    public Item createItem(Item item) {
+        boolean ownerExists = isOwnerExists(item.getOwner());
+        if (!ownerExists) {
+            throw new OwnerNotFoundException(OWNER_NOT_FOUND_MESSAGE + item.getOwner());
         }
-
-        return items;
-    }
-
-    @Override
-    public ItemDto getById(Long id) {
-        Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Невозиожно найдена вещь с id: " + id));
-
-        return toItemDto(item);
+        return itemDao.createItem(item);
     }
 
     @Override
-    public ItemDto create(ItemDto itemDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Невозможно создать вещь - " +
-                        "не найден пользователь с id: " + userId));
-        Item item = toItem(itemDto);
-        item.setOwner(user);
-        itemRepository.create(item);
-
-        return toItemDto(item);
+    public Item updateItem(Item item) {
+        return itemDao.updateItem(item);
     }
 
     @Override
-    public ItemDto update(ItemDto itemDto, Long id, Long userId) {
-        Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + id));
-        if (!item.getOwner().getId().equals(userId)) {
-            throw new NotFoundException("Невозможно обновить вещь - у пользователя с id: " + userId + "нет такой вещи");
-        }
-        if (itemDto.getName() != null) {
-            item.setName(itemDto.getName());
-        }
-        if (itemDto.getDescription() != null) {
-            item.setDescription(itemDto.getDescription());
-        }
-        if (itemDto.getAvailable() != null) {
-            item.setAvailable(itemDto.getAvailable());
-        }
-
-        return toItemDto(itemRepository.update(item));
+    public Item findItemById(Long itemId) {
+        return itemDao.findItemById(itemId);
     }
 
     @Override
-    public void delete(Long id) {
-        getById(id);
-        itemRepository.delete(id);
+    public List<Item> findAllItems(Long userId) {
+        return itemDao.findAllItems(userId);
     }
 
     @Override
-    public List<ItemDto> search(String text) {
-        List<ItemDto> searchedItems = new ArrayList<>();
-        if (text.isBlank()) {
-            return searchedItems;
+    public List<Item> findItemsByRequest(String text) {
+        if (text == null || text.isBlank() || text.length() <= MIN_SEARCH_REQUEST_LENGTH) {
+            return new ArrayList<>();
         }
-        for (Item item : itemRepository.findAll()) {
-            if (isSearched(text, item)) {
-                searchedItems.add(toItemDto(item));
-            }
-        }
-
-        return searchedItems;
+        return itemDao.findItemsByRequest(text);
     }
 
-    private Boolean isSearched(String text, Item item) {
-        return item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                item.getDescription().toLowerCase().contains(text.toLowerCase()) && item.getAvailable();
+    private boolean isOwnerExists(long ownerId) {
+        List<User> users = userDao.findAllUsers();
+        List<User> result = users.stream().filter(user -> user.getId() == ownerId).collect(Collectors.toList());
+        return result.size() > 0;
     }
-
-
 }
