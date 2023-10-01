@@ -1,11 +1,12 @@
 package ru.practicum.shareit.user.repository;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
 
-@Component
+@Repository
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
     private Long id = 1L;
@@ -17,26 +18,41 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        return users.get(id) == null ? Optional.empty() : Optional.of(users.get(id));
+        return users.values().stream()
+                .filter(user -> id.equals(user.getId()))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return users.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
     }
 
     @Override
     public User create(User user) {
-        user.setId(id);
-        id++;
+        if (user.getId() == null) {
+            user.setId(id++);
+        }
         users.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User update(User user) {
-        users.put(user.getId(), user);
-
+    public User update(Long id, User user) {
+        users.replace(id, user);
+        user.setId(id);
         return user;
     }
 
     @Override
     public void delete(Long id) {
         users.remove(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return users.containsKey(id);
     }
 }
