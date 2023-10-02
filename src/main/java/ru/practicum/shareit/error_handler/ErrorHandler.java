@@ -42,4 +42,10 @@ public class ErrorHandler {
     public ErrorResponse handle(MethodArgumentNotValidException e) {
         return new ErrorResponse("Ошибка валидации 400:", e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handle(RuntimeException e) {
+        return new ErrorResponse("Произошла ошибка на сервере", e.getMessage());
+    }
 }
