@@ -21,10 +21,12 @@ import java.util.NoSuchElementException;
 
 import static ru.practicum.shareit.booking.BookingStatus.REJECTED;
 import static ru.practicum.shareit.booking.BookingStatus.WAITING;
+import static ru.practicum.shareit.booking.State.*;
 
 @Service
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
+
     public static final String ILLEGAL_SATE_MESSAGE = "  state: ";
     public static final String INVALID_BUCKING = "нельзя забронировать свою же вещь";
     public static final String SATE_ALREADY_SET_MESSAGE = "статус уже выставлен state: ";
@@ -102,29 +104,29 @@ public class BookingServiceImpl implements BookingService {
         Sort sort = Sort.by("start").descending();
 
         switch (status) {
-            case REJECTED:
+            case REJECTED :
                 bookings = bookingRepository
-                        .findByBookerIdAndStatus(userId, REJECTED, sort);
+                .findByBookerIdAndStatus(userId, REJECTED, sort);
                 break;
-            case WAITING:
+            case WAITING :
                 bookings = bookingRepository
-                        .findByBookerIdAndStatus(userId, WAITING, sort);
+                .findByBookerIdAndStatus(userId, WAITING, sort);
                 break;
-            case CURRENT:
+            case CURRENT :
                 bookings = bookingRepository.findByBookerIdCurrent(userId, now);
                 break;
-            case FUTURE:
+            case FUTURE :
                 bookings = bookingRepository
-                        .findByBookerIdAndStartIsAfter(userId, now, sort);
+                .findByBookerIdAndStartIsAfter(userId, now, sort);
                 break;
-            case PAST:
+            case PAST :
                 bookings = bookingRepository
-                        .findByBookerIdAndEndIsBefore(userId, now, sort);
+                .findByBookerIdAndEndIsBefore(userId, now, sort);
                 break;
-            case ALL:
+            case ALL :
                 bookings = bookingRepository.findByBookerId(userId, sort);
                 break;
-            default:
+            default :
                 throw new IllegalArgumentException(ILLEGAL_SATE_MESSAGE);
         }
         return BookingMapper.toListDetailedDto(bookings);
@@ -139,30 +141,30 @@ public class BookingServiceImpl implements BookingService {
         Sort sort = Sort.by("start").descending();
 
         switch (state) {
-            case REJECTED:
+            case REJECTED :
                 bookings = bookingRepository
-                        .findBookingByItemOwnerAndStatus(userId, REJECTED, sort);
+                .findBookingByItemOwnerAndStatus(userId, REJECTED, sort);
                 break;
-            case WAITING:
+            case WAITING :
                 bookings = bookingRepository
-                        .findBookingByItemOwnerAndStatus(userId, WAITING, sort);
+                .findBookingByItemOwnerAndStatus(userId, WAITING, sort);
                 break;
-            case CURRENT:
+            case CURRENT :
                 bookings = bookingRepository.findBookingsByItemOwnerCurrent(userId, now);
                 break;
-            case FUTURE:
+            case FUTURE :
                 bookings = bookingRepository
-                        .findBookingByItemOwnerAndStartIsAfter(userId, now, sort);
+                .findBookingByItemOwnerAndStartIsAfter(userId, now, sort);
                 break;
-            case PAST:
+            case PAST :
                 bookings = bookingRepository
-                        .findBookingByItemOwnerAndEndIsBefore(userId, now, sort);
+                .findBookingByItemOwnerAndEndIsBefore(userId, now, sort);
                 break;
-            case ALL:
+            case ALL :
                 bookings = bookingRepository
-                        .findBookingByItemOwner(userId, sort);
+                .findBookingByItemOwner(userId, sort);
                 break;
-            default:
+            default :
                 throw new IllegalArgumentException(ILLEGAL_SATE_MESSAGE);
         }
         return BookingMapper.toListDetailedDto(bookings);

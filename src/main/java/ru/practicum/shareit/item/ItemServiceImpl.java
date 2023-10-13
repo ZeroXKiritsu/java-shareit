@@ -40,8 +40,8 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public ItemDto createItem(ItemDto dto, Long userId) {
-        Item item = ItemMapper.toModel(dto, userId);
+    public ItemDto createItem(ItemDto itemDto, Long userId) {
+        Item item = ItemMapper.toModel(itemDto, userId);
         boolean ownerExists = isOwnerExists(item.getOwner());
         if (!ownerExists) {
             throw new OwnerNotFoundException(OWNER_NOT_FOUND_MESSAGE + item.getOwner());
@@ -51,23 +51,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public DetailedCommentDto createComment(CreateCommentDto dto, Long itemId, Long userID) {
-        if (dto.getText().isBlank()) {
-            throw new CommentException(EMPTY_COMMENT_MESSAGE);
-        }
+    public DetailedCommentDto createComment(CreateCommentDto dto, Long itemId, Long userId) {
+        if (dto.getText().isBlank()) throw new CommentException(EMPTY_COMMENT_MESSAGE);
         Item item = itemRepository.findById(itemId).orElseThrow();
-        User author = userRepository.findById(userID).orElseThrow();
+        User author = userRepository.findById(userId).orElseThrow();
 
-        if (bookingRepository.findBookingsForAddComments(itemId, userID, LocalDateTime.now()).isEmpty()) {
+        if (bookingRepository.findBookingsForAddComments(itemId, userId, LocalDateTime.now()).isEmpty()) {
             throw new CommentException(COMMENT_EXCEPTION_MESSAGE + " itemId: " + itemId);
         }
         Comment comment = CommentMapper.toModel(dto, item, author);
+        comment = commentRepository.save(comment);
         return CommentMapper.toCommentDetailedDto(comment);
     }
 
     @Override
-    public ItemDto updateItem(ItemDto dto, Long itemId, Long userId) {
-        Item item = ItemMapper.toModel(dto, userId);
+    public ItemDto updateItem(ItemDto itemDto, Long itemId, Long userId) {
+        Item item = ItemMapper.toModel(itemDto, userId);
         item.setId(itemId);
         List<Comment> comments = commentRepository.findByItemId(itemId);
         item = itemRepository.save(refreshItem(item));
@@ -131,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
     private boolean isOwnerExists(long ownerId) {
         List<User> users = userRepository.findAll();
         List<User> result = users.stream().filter(user -> user.getId() == ownerId).collect(Collectors.toList());
-        return !result.isEmpty();
+        return result.size() > 0;
     }
 
     private Item refreshItem(Item patch) {

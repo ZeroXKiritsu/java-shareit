@@ -15,31 +15,31 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handle(EmailConflictException e) {
-        return new ErrorResponse("Адрес почты уже используется", e.getMessage());
+        return new ErrorResponse("Адрес почты уже используется ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(UserNotFoundException e) {
-        return new ErrorResponse("Недопустимое значение id", e.getMessage());
+        return new ErrorResponse("Недопустимое значение id ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(OwnerNotFoundException e) {
-        return new ErrorResponse("Не найден владелец вещи", e.getMessage());
+        return new ErrorResponse("Не найден владелец вещи ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handle(DeniedAccessException e) {
-        return new ErrorResponse("Отказано в доступе", e.getMessage());
+        return new ErrorResponse("Отказано в доступе ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(MethodArgumentNotValidException e) {
-        return new ErrorResponse("Ошибка валидации 400:", e.getMessage());
+        return new ErrorResponse("Ошибка валидации 400: ", e.getMessage());
     }
 
     @ExceptionHandler
@@ -51,36 +51,30 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(UnavailableBookingException e) {
-        return new ErrorResponse("Ошибка бронирования 400:", e.getMessage());
+        return new ErrorResponse("Ошибка бронирования 400: ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(IllegalArgumentException e) {
-        return new ErrorResponse("Переданой недопустимое значение 400:", e.getMessage());
+        return new ErrorResponse("Передано недопустимое значение 400: ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(UnsupportedStatusException e) {
-        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS:", e.getMessage());
+        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(InvalidBookingException e) {
-        return new ErrorResponse("недопустимое бронирование 400:", e.getMessage());
+        return new ErrorResponse("недопустимое бронирование 404: ", e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(CommentException e) {
-        return new ErrorResponse("Невозможно оставить комментарий 400:", e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handle(RuntimeException e) {
-        return new ErrorResponse("Произошла ошибка на сервере", e.getMessage());
+        return new ErrorResponse("невозможно оставить комментарий 400: ", e.getMessage());
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(path = "/users")
 public class UserController {
+
     public static final int MIN_ID_VALUE = 1;
     public static final String NULL_USER_ID_MESSAGE = "userID is null";
 

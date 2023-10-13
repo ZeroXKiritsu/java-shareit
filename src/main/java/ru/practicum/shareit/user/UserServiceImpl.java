@@ -8,6 +8,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
 
     @Override
