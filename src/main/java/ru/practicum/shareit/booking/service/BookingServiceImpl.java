@@ -49,7 +49,6 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDtoOut update(Long userId, Long bookingId, Boolean approved) {
         Booking booking = validateBookingDetails(userId, bookingId, 1);
-        assert booking != null;
         BookingStatus newStatus = approved ? BookingStatus.APPROVED : BookingStatus.REJECTED;
         booking.setStatus(newStatus);
         return BookingMapper.toBookingOut(bookingRepository.save(booking));
@@ -59,7 +58,6 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDtoOut findBookingByUserId(Long userId, Long bookingId) {
         Booking booking = validateBookingDetails(userId, bookingId, 2);
-        assert booking != null;
         return BookingMapper.toBookingOut(booking);
     }
 
@@ -181,7 +179,8 @@ public class BookingServiceImpl implements BookingService {
                     throw new NotFoundException("Пользователь не владелeц и не автор бронирования ");
                 }
                 return booking;
+            default:
+                throw new IllegalArgumentException("Недопустимое значение number: " + number);
         }
-        return null;
     }
 }

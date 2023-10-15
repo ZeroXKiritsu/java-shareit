@@ -60,9 +60,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDtoOut update(Long userId, Long itemId, ItemDto itemDto) {
         UserDto user = userService.findById(userId);
         Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> {
-                            return new NotFoundException("Вещи с " + itemId + " не существует");
-                        }
+                .orElseThrow(() -> new NotFoundException("Вещи с " + itemId + " не существует")
                 );
         if (!UserMapper.toUser(user).equals(item.getOwner())) {
             throw new NotFoundException("Пользователь с id = " + userId +
@@ -114,7 +112,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public List<ItemDtoOut> findAll(Long userId) {
-        UserDto owner = userService.findById(userId);
         List<Item> itemList = itemRepository.findAllByOwnerId(userId);
         List<Long> idList = itemList.stream()
                 .map(Item::getId)
@@ -128,7 +125,8 @@ public class ItemServiceImpl implements ItemService {
                         BookingStatus.APPROVED)
                 .stream()
                 .map(BookingMapper::toBookingOut)
-                .collect(groupingBy(BookingDtoOut::getItemId, toList()));
+                .collect(groupingBy(BookingDtoOut::getId, toList()));
+
 
         return itemList
                 .stream()
