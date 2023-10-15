@@ -125,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
                         BookingStatus.APPROVED)
                 .stream()
                 .map(BookingMapper::toBookingOut)
-                .collect(groupingBy(BookingDtoOut::getId, toList()));
+                .collect(groupingBy(BookingDtoOut::getItemId, toList()));
 
 
         return itemList
