@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -112,29 +111,26 @@ public class ItemServiceImpl implements ItemService {
         List<Long> idList = itemList.stream()
                 .map(Item::getId)
                 .collect(Collectors.toList());
-Map<Long, List<CommentDtoOut>> comments = commentRepository.findAllByItemIdIn(idList)
+        Map<Long, List<CommentDtoOut>> comments = commentRepository.findAllByItemIdIn(idList)
                 .stream()
                 .map(CommentMapper::toCommentDtoOut)
                 .collect(groupingBy(CommentDtoOut::getItemId, toList()));
 
         Map<Long, List<BookingDtoOut>> bookings = bookingRepository.findAllByItemInAndStatusOrderByStartAsc(itemList,
-                        BookingStatus.APPROVED)
+                BookingStatus.APPROVED)
                 .stream()
                 .map(BookingMapper::toBookingOut)
                 .collect(groupingBy(BookingDtoOut::getItemId, toList()));
 
-        
         return itemList
                 .stream()
                 .map(item -> ItemMapper.toItemDtoOut(
                         item,
-                            getLastBooking(bookings.get(item.getId()), LocalDateTime.now()),
-                            comments.get(item.getId()),
-                            getNextBooking(bookings.get(item.getId()), LocalDateTime.now())
-                ))
+                        getLastBooking(bookings.get(item.getId()), LocalDateTime.now()),
+                        comments.get(item.getId()),
+                        getNextBooking(bookings.get(item.getId()), LocalDateTime.now())))
                 .collect(toList());
     }
-
 
     @Override
     @Transactional
