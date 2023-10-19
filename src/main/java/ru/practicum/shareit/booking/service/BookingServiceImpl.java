@@ -139,7 +139,6 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-
     private void bookingValidation(BookingDto bookingDto, User user, Item item) {
         if (!item.getAvailable()) {
             throw new ValidationException("Вещь не доступена для бронирования.");
@@ -181,7 +180,8 @@ public class BookingServiceImpl implements BookingService {
                     throw new NotFoundException("Пользователь не владелeц и не автор бронирования ");
                 }
                 return booking;
+            default:
+                throw new IllegalArgumentException("Недопустимое значение number: " + number);
         }
-        return null;
     }
 }

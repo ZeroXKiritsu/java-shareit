@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingItemDto {
+public final class BookingItemDto {
     private Long id;
     private Long bookerId;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemDtoOut {
+public final class ItemDtoOut {
     private Long id;
     private String name;
     private String description;
@@ -18,7 +18,6 @@ public class ItemDtoOut {
     private BookingDtoOut lastBooking;
     private List<CommentDtoOut> comments;
     private BookingDtoOut nextBooking;
-    // задел на следующий спринт private ItemRequestDtoOut request;
 
 
     public ItemDtoOut(Long id, String name, String description, Boolean available) {

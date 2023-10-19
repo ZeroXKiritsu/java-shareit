@@ -10,12 +10,12 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
-public class UserDto {
+public final class UserDto {
 
-    private Long id;
+    private final Long id;
     @NotBlank(groups = {Create.class})
-    private String name;
+    private final String name;
     @Email(groups = {Create.class, Update.class})
     @NotBlank(groups = {Create.class})
-    private String email;
+    private final String email;
 }
