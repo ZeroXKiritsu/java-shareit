@@ -185,7 +185,8 @@ public class BookingServiceImpl implements BookingService {
                     throw new NotFoundException("Пользователь не владелeц и не автор бронирования ");
                 }
                 return booking;
+            default:
+                throw new IllegalArgumentException("Недопустимое значение number: " + number);
         }
-        return null;
     }
 }

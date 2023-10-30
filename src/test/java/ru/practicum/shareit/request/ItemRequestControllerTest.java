@@ -103,7 +103,7 @@ class ItemRequestControllerTest {
 
     @Test
     @SneakyThrows
-    void get() {
+    void getRequestById() {
         Long requestId = 1L;
 
         when(requestService.getRequestById(user.getId(), requestId)).thenReturn(requestDto);

@@ -31,7 +31,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Transactional
     public ItemRequestDtoOut add(Long userId, ItemRequestDto itemRequestDto) {
         User user = UserMapper.toUser(userService.findById(userId));
-        ItemRequest request = ItemRequestMapper.toRequest(user, itemRequestDto);
+        ItemRequest request = ItemRequestMapper.toRequest(itemRequestDto);
         request.setRequester(user);
         return ItemRequestMapper.toRequestDtoOut(requestRepository.save(request));
     }
