@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.markers.Create;
 import ru.practicum.shareit.user.markers.Update;
 
@@ -9,13 +11,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public final class UserDto {
 
-    private final Long id;
+    private Long id;
     @NotBlank(groups = {Create.class})
-    private final String name;
+    private String name;
     @Email(groups = {Create.class, Update.class})
     @NotBlank(groups = {Create.class})
-    private final String email;
+    private String email;
 }
