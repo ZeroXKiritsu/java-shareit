@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CommentDto {
+public final class CommentDto {
 
     @NotBlank
     private String text;

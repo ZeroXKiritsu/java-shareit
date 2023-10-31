@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemDto {
+public final class ItemDto {
     @NotBlank
     private String name;
     @NotBlank

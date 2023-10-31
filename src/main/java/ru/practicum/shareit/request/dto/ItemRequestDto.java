@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ItemRequestDto {
+public final class ItemRequestDto {
 
     @NotBlank
     @Size(max = 255)
