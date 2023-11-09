@@ -56,8 +56,6 @@ class ItemServiceImplTest {
     @InjectMocks
     private ItemServiceImpl itemService;
 
-    @Captor
-    private ArgumentCaptor<Item> itemArgumentCaptor;
 
     private final User user = User.builder()
             .id(1L)
@@ -93,8 +91,6 @@ class ItemServiceImplTest {
             .available(true)
             .comments(Collections.emptyList())
             .build();
-    private final ItemDto itemDtoUpdate = ItemDto.builder()
-            .build();
 
     private final Comment comment = Comment.builder()
             .id(1L)
@@ -111,42 +107,6 @@ class ItemServiceImplTest {
             .status(BookingStatus.APPROVED)
             .start(LocalDateTime.now().minusDays(1L))
             .end(LocalDateTime.now().plusDays(1L))
-            .build();
-
-    private final Booking lastBooking = Booking.builder()
-            .id(2L)
-            .item(item)
-            .booker(user)
-            .status(BookingStatus.APPROVED)
-            .start(LocalDateTime.now().minusDays(2L))
-            .end(LocalDateTime.now().minusDays(1L))
-            .build();
-
-    private final Booking pastBooking = Booking.builder()
-            .id(3L)
-            .item(item)
-            .booker(user)
-            .status(BookingStatus.APPROVED)
-            .start(LocalDateTime.now().minusDays(10L))
-            .end(LocalDateTime.now().minusDays(9L))
-            .build();
-
-    private final Booking nextBooking = Booking.builder()
-            .id(4L)
-            .item(item)
-            .booker(user)
-            .status(BookingStatus.APPROVED)
-            .start(LocalDateTime.now().plusDays(1L))
-            .end(LocalDateTime.now().plusDays(2L))
-            .build();
-
-    private final Booking futureBooking = Booking.builder()
-            .id(5L)
-            .item(item)
-            .booker(user)
-            .status(BookingStatus.APPROVED)
-            .start(LocalDateTime.now().plusDays(10L))
-            .end(LocalDateTime.now().plusDays(20L))
             .build();
 
     @Test
@@ -212,7 +172,10 @@ class ItemServiceImplTest {
         when(userService.findById(user.getId())).thenReturn(userDto);
 
         NotFoundException itemNotFoundException = assertThrows(NotFoundException.class,
-                () -> itemService.update(user.getId(), itemDto.getId(), ItemMapper.toItemDto(updatedItem)));
+                () -> {
+                    assert updatedItem != null;
+                    itemService.update(user.getId(), itemDto.getId(), ItemMapper.toItemDto(updatedItem));
+                });
 
         assertEquals(itemNotFoundException.getMessage(), "Пользователь с id = " + user.getId() +
                 " не является собственником вещи id = " + item.getId());

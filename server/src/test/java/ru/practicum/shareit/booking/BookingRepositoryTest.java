@@ -73,7 +73,7 @@ class BookingRepositoryTest {
             .build();
 
     @BeforeEach
-    private void init() {
+    public void init() {
         testEntityManager.persist(user);
         testEntityManager.persist(owner);
         testEntityManager.persist(item);
@@ -84,7 +84,7 @@ class BookingRepositoryTest {
     }
 
     @AfterEach
-    private void deleteAll() {
+    public void deleteAll() {
         bookingRepository.deleteAll();
     }
 

@@ -119,7 +119,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public List<ItemDtoOut> findAll(Long userId, Integer from, Integer size) {
-        UserDto owner = userService.findById(userId);
         Pageable pageable = PageRequest.of(from / size, size);
         List<Item> itemList = itemRepository.findAllByOwnerId(userId, pageable);
         itemList.sort((o1, o2) -> Math.toIntExact(o1.getId() - o2.getId()));

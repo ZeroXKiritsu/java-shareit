@@ -47,7 +47,7 @@ class CommentRepositoryTest {
 
 
     @BeforeEach
-    private void init() {
+    public void init() {
         testEntityManager.persist(user);
         testEntityManager.persist(item);
         testEntityManager.flush();
@@ -55,7 +55,7 @@ class CommentRepositoryTest {
     }
 
     @AfterEach
-    private void deleteAll() {
+    public void deleteAll() {
         commentRepository.deleteAll();
     }
 
