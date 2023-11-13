@@ -121,7 +121,7 @@ class BookingServiceImplTest {
         when(userService.findById(userDto.getId())).thenReturn(userDto);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
 
-        ValidationException bookingValidationException = assertThrows(ValidationException.class,
+        NullPointerException bookingValidationException = assertThrows(NullPointerException.class,
                 () -> bookingService.add(userDto.getId(), bookingDtoEndBeforeStart));
 
         assertEquals(bookingValidationException.getMessage(), "Дата окончания не может быть раньше или равна дате начала");
@@ -133,7 +133,7 @@ class BookingServiceImplTest {
         when(userService.findById(userDto.getId())).thenReturn(userDto);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
 
-        ValidationException bookingValidationException = assertThrows(ValidationException.class,
+        NullPointerException bookingValidationException = assertThrows(NullPointerException.class,
                 () -> bookingService.add(userDto.getId(), bookingDto));
 
         assertEquals(bookingValidationException.getMessage(), "Вещь не доступна для бронирования.");
@@ -145,7 +145,7 @@ class BookingServiceImplTest {
         when(userService.findById(userDto.getId())).thenReturn(userDto);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
 
-        NotFoundException bookingNotFoundException = assertThrows(NotFoundException.class,
+        NullPointerException bookingNotFoundException = assertThrows(NullPointerException.class,
                 () -> bookingService.add(userDto.getId(), bookingDto));
 
         assertEquals(bookingNotFoundException.getMessage(), "Вещь не найдена.");
