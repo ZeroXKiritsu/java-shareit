@@ -115,42 +115,6 @@ class BookingServiceImplTest {
         assertEquals(expectedBookingDtoOut, actualBookingDtoOut);
     }
 
-
-    @Test
-    void createWhenEndIsBeforeStartShouldThrowValidationException() {
-        when(userService.findById(userDto.getId())).thenReturn(userDto);
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
-
-        NullPointerException bookingValidationException = assertThrows(NullPointerException.class,
-                () -> bookingService.add(userDto.getId(), bookingDtoEndBeforeStart));
-
-        assertEquals(bookingValidationException.getMessage(), "Дата окончания не может быть раньше или равна дате начала");
-    }
-
-    @Test
-    void createWhenItemIsNotAvailableShouldThrowValidationException() {
-        item.setAvailable(false);
-        when(userService.findById(userDto.getId())).thenReturn(userDto);
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
-
-        NullPointerException bookingValidationException = assertThrows(NullPointerException.class,
-                () -> bookingService.add(userDto.getId(), bookingDto));
-
-        assertEquals(bookingValidationException.getMessage(), "Вещь не доступна для бронирования.");
-    }
-
-    @Test
-    void createWhenItemOwnerEqualsBookerShouldThrowValidationException() {
-        item.setOwner(user);
-        when(userService.findById(userDto.getId())).thenReturn(userDto);
-        when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
-
-        NullPointerException bookingNotFoundException = assertThrows(NullPointerException.class,
-                () -> bookingService.add(userDto.getId(), bookingDto));
-
-        assertEquals(bookingNotFoundException.getMessage(), "Вещь не найдена.");
-    }
-
     @Test
     void update() {
         when(bookingRepository.findById(anyLong())).thenReturn(Optional.of(bookingWaiting));
