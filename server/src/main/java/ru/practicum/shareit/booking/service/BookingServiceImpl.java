@@ -42,7 +42,6 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Вещь не найдена.");
         }
         Item item = itemById.get();
-        bookingValidation(bookingDto, user, item);
         Booking booking = BookingMapper.toBooking(user, item, bookingDto);
         return BookingMapper.toBookingOut(bookingRepository.save(booking));
     }
@@ -140,19 +139,6 @@ public class BookingServiceImpl implements BookingService {
                         .collect(Collectors.toList());
             default:
                 throw new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS");
-        }
-    }
-
-
-    private void bookingValidation(BookingDto bookingDto, User user, Item item) {
-        if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования.");
-        }
-        if (user.getId().equals(item.getOwner().getId())) {
-            throw new NotFoundException("Вещь не найдена.");
-        }
-        if (bookingDto.getStart().isAfter(bookingDto.getEnd()) || bookingDto.getStart().isEqual(bookingDto.getEnd())) {
-            throw new ValidationException("Дата окончания не может быть раньше или равна дате начала");
         }
     }
 
