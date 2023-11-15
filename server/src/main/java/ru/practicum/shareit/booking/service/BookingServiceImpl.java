@@ -151,9 +151,6 @@ public class BookingServiceImpl implements BookingService {
         if (user.getId().equals(item.getOwner().getId())) {
             throw new NotFoundException("Вещь не найдена.");
         }
-        if (bookingDto.getStart().isAfter(bookingDto.getEnd()) || bookingDto.getStart().isEqual(bookingDto.getEnd())) {
-            throw new ValidationException("Дата окончания не может быть раньше или равна дате начала");
-        }
     }
 
     private BookingState validState(String bookingState) {
